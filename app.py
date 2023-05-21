@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import numpy as np
 import re
 import string
@@ -30,14 +30,6 @@ url_tfidf = 'tfidf_data.pickle'
 # Load the contents of the URL into a bytes object
 with open(url_tfidf, 'rb') as f:
     vectorizer, term_matrix, feature_names = pickle.load(f)
-
-# Load models and data
-# with open('lda.pickle', 'rb') as f:
-#     lda_model = pickle.load(f)
-
-# # Load the pickled objects
-# with open('tfidf_data.pickle', 'rb') as f:
-#     vectorizer, term_matrix, feature_names = pickle.load(f)
 
 class TextPreprocessor():
     def remove_special_characters(self, text):
@@ -112,6 +104,37 @@ def predict():
     topic_probabilities = Topic_Label().dict(topic_distribution)
 
     return jsonify({'topic_label': topic_label, 'probabilities': topic_probabilities})
+
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        text = request.form['text']
+# Preprocess the input text using the TextPreprocessor class
+        clean_text = TextPreprocessor().remove_special_characters(text)
+        tokens = TextPreprocessor().tokenize(clean_text)
+        tokens_no_punct = TextPreprocessor().remove_punctuation(tokens)
+        tokens_no_stop = TextPreprocessor().remove_stopwords(tokens_no_punct)
+        stemmed_tokens = TextPreprocessor().stem(tokens_no_stop)
+        preprocessed_text = " ".join(stemmed_tokens)
+
+        # Vectorize the preprocessed text using the loaded vectorizer
+        new_term_matrix = vectorizer.transform([preprocessed_text])
+
+        # Predict the topic label using the LDA model
+        topic_distribution = lda_model.transform(new_term_matrix)
+        topic_label = Topic_Label().label(topic_distribution)
+        topic_probabilities = Topic_Label().dict(topic_distribution)
+
+        return render_template('result.html', topic_label=topic_label, probabilities=topic_probabilities)
+    else:
+        return render_template('index.html')
+    
+@app.route('/result')
+def result():
+    topic_label = request.args.get('topic_label')
+    probabilities = request.args.get('probabilities')
+    return render_template('result.html', topic_label=topic_label, probabilities=probabilities)
+
 
 if __name__ == '__main__':
     app.run()

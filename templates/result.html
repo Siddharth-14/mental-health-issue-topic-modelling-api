@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topic Classification Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .result {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .top-label-title {
+            font-size: 26px;
+        }
+
+        .top-label-value {
+            font-size: 22px;
+        }
+
+        .label-title-heading {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background-color: #4CAF50;
+        }
+
+        .try-again-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .try-again-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic Classification Result</h1>
+    <div class="result">
+        <div class="label">
+            <p class="top-label-title">Topic Label:</p>
+            <p class="top-label-value">{{ topic_label.title() }}</p>
+        </div>
+        <div class="probabilities">
+            <p class="label-title-heading">Topic Probabilities:</p>
+            {% for label, probability in probabilities | dictsort(true, 'value') %}
+                <p class="label-title">{{ label.title() }}:</p>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: {{ probability * 100 }}%;"></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <button class="try-again-button" onclick="window.location.href='/';">Try Again</button>
+</body>
+</html>
