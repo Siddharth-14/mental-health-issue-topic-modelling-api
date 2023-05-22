@@ -8,7 +8,6 @@ from spacy.lang.en.stop_words import STOP_WORDS
 from nltk.stem import PorterStemmer
 from concurrent.futures import ProcessPoolExecutor
 import pickle
-from urllib.request import urlopen
 from flask_cors import CORS
 
 nltk.download('punkt')
