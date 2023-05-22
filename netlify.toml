@@ -1,0 +1,8 @@
+[build]
+  command = "python app.py"  # Specify the build command
+
+[build.environment]
+  NETLIFY = "true"  # Set environment variable to indicate Netlify build
+
+[deploy]
+  command = "gunicorn app:app --workers 1 --threads 1"  # Specify the deploy command
