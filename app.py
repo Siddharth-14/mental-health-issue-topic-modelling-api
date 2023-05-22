@@ -30,6 +30,7 @@ url_tfidf = 'tfidf_data.pickle'
 with open(url_tfidf, 'rb') as f:
     vectorizer, term_matrix, feature_names = pickle.load(f)
 
+
 class TextPreprocessor():
     def remove_special_characters(self, text):
         text = re.sub(r'http\S+', '', text)
@@ -55,6 +56,7 @@ class TextPreprocessor():
             result = list(executor.map(func, data))
         return result
 
+
 class Topic_Label():
     def __init__(self):
         self.topic_labels = {
@@ -68,14 +70,14 @@ class Topic_Label():
             7: 'self-harm',
             8: 'suicidal thoughts',
             9: 'education, work, financial stress'
-            }
+        }
         pass
-    
+
     def label(self, topic_distribution):
         max_index = np.argmax(np.array(topic_distribution))
         return self.topic_labels[max_index]
-    
-    def dict(self,topic_distribution):
+
+    def dict(self, topic_distribution):
         topic_probabilities = {}
         for idx, prob in enumerate(topic_distribution[0]):
             label = self.topic_labels[idx]
@@ -105,6 +107,7 @@ def predict():
 
     return jsonify({'topic_label': topic_label, 'probabilities': topic_probabilities})
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -127,6 +130,7 @@ def home():
         return render_template('result.html', topic_label=topic_label, probabilities=topic_probabilities)
     else:
         return render_template('index.html')
-    
+
+
 if __name__ == '__main__':
     app.run(debug=True)
