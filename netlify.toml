@@ -1,3 +1,2 @@
 [build]
-  command = "python app.py"  # Specify the build command
   command = "gunicorn app:app --workers 1 --threads 1"  # Specify the deploy command
