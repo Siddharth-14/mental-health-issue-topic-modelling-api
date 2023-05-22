@@ -1,2 +1,3 @@
 [build]
-  command = "gunicorn app:app --workers 1 --threads 1"  # Specify the deploy command
+  command = "pip install -r requirements.txt && python serverless.py"
+  functions = "functions"
