@@ -128,13 +128,3 @@ def home():
         return render_template('result.html', topic_label=topic_label, probabilities=topic_probabilities)
     else:
         return render_template('index.html')
-    
-@app.route('/result')
-def result():
-    topic_label = request.args.get('topic_label')
-    probabilities = request.args.get('probabilities')
-    return render_template('result.html', topic_label=topic_label, probabilities=probabilities)
-
-
-if __name__ == '__main__':
-    app.run()
